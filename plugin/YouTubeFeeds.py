@@ -327,6 +327,11 @@ class YouTubeFeeds():
 
         while next == "true":
             index += 50
+            
+            #per subscription play all - listlimit prevent delay
+            if index >= int(get("listlimit")):
+                break
+            
             url = feed + "start-index=" + str(index) + "&max-results=" + repr(50)
             url = url.replace(" ", "+")
             result = self.core._fetchPage({"link": url, "auth": "true"})

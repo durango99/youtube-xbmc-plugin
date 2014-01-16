@@ -604,6 +604,10 @@ class YouTubeNavigation():
         if (item("channel") or item("contact")):
             if (self.settings.getSetting("username") != "" and self.settings.getSetting("oauth2_access_token")):
                 title = self.common.makeAscii(item("channel", ""))
+                
+                #per subscription play all - add play all for subscription
+                cm.append((self.language(30520), "XBMC.RunPlugin(%s?path=%s&action=play_all&user_feed=%s&contact=%s&login=true&listlimit=150&)" % (sys.argv[0], item("path"), item("user_feed"), item("channel"))))
+                
                 if (get("external")):
                     channel = get("channel", "")
                     if not channel:
