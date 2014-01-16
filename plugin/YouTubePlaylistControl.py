@@ -17,7 +17,8 @@
 '''
 
 import sys
-
+import sqlite3
+import os 
 
 class YouTubePlaylistControl():
 
@@ -54,7 +55,8 @@ class YouTubePlaylistControl():
             params["user_feed"] = "playlist"
             params["login"] = "true"
             result = self.getUserFeed(params)
-        elif get("user_feed") in ["recommended", "watch_later", "newsubscriptions", "favorites"]:
+        #per subscription play all - contacts uploads
+        elif get("user_feed") in ["recommended", "watch_later", "newsubscriptions", "favorites", "uploads"]:
             params["login"] = "true"
             result = self.getUserFeed(params)
         elif get("video_list"):
@@ -89,12 +91,24 @@ class YouTubePlaylistControl():
             video = entry.get
             if video("videoid") == "false":
                 continue
-            listitem = self.xbmcgui.ListItem(label=video("Title"), iconImage=video("thumbnail"), thumbnailImage=video("thumbnail"))
-            listitem.setProperty('IsPlayable', 'true')
-            listitem.setProperty("Video", "true" )
-            listitem.setInfo(type='Video', infoLabels=entry)
+ 
+            #play all skip watched
+            vpath = sys.argv[0] + '?path=/root/video&action=play_video&videoid=' + video("videoid")
 
-            playlist.add(video_url % (sys.argv[0], video("videoid") ), listitem)
+            from sqlite3 import dbapi2 as sqlite
+            DB = os.path.join(self.xbmc.translatePath("special://database"), 'MyVideos75.db')
+            db = sqlite.connect(DB)
+            rows = db.execute("SELECT count(*) FROM files WHERE strFilename ='" + vpath + "'  and playCount > 0")
+			
+            result=rows.fetchone()[0]
+
+            if result==0:
+                listitem = self.xbmcgui.ListItem(label=video("Title"), iconImage=video("thumbnail"), thumbnailImage=video("thumbnail"))
+                listitem.setProperty('IsPlayable', 'true')
+                listitem.setProperty("Video", "true" )
+                listitem.setInfo(type='Video', infoLabels=entry)
+
+                playlist.add(video_url % (sys.argv[0], video("videoid") ), listitem)
 
         if (get("shuffle")):
             playlist.shuffle()
