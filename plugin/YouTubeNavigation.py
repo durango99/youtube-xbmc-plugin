@@ -606,7 +606,7 @@ class YouTubeNavigation():
                 title = self.common.makeAscii(item("channel", ""))
                 
                 #per subscription play all - add play all for subscription
-                cm.append((self.language(30520), "XBMC.RunPlugin(%s?path=%s&action=play_all&user_feed=%s&contact=%s&login=true&listlimit=150&)" % (sys.argv[0], item("path"), item("user_feed"), item("channel"))))
+                cm.append((self.language(30520), "XBMC.RunPlugin(%s?path=%s&action=play_all&user_feed=%s&contact=%s&login=true&listlimit=true&)" % (sys.argv[0], item("path"), item("user_feed"), item("channel"))))
                 
                 if (get("external")):
                     channel = get("channel", "")

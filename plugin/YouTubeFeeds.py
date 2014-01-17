@@ -329,7 +329,8 @@ class YouTubeFeeds():
             index += 50
             
             #per subscription play all - listlimit prevent delay
-            if index >= int(get("listlimit")):
+            #if index >= int(get("listlimit")):
+            if get("listlimit") == "true" and index >=150:
                 break
             
             url = feed + "start-index=" + str(index) + "&max-results=" + repr(50)
